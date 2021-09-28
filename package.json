@@ -1,0 +1,19 @@
+{
+  "name": "webchat",
+  "version": "1.0.0",
+  "description": "chat online",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Ruila/webchat.git"
+  },
+  "author": "",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Ruila/webchat/issues"
+  },
+  "homepage": "https://github.com/Ruila/webchat#readme"
+}
