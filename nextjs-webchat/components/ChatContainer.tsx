@@ -1,11 +1,35 @@
 
 import { NextComponentType } from 'next'
+import { TextField } from '@mui/material';
+import { makeStyles } from '@mui/styles';
+import Button from '@mui/material/Button'; 
+
+const useStyles = makeStyles (theme => ({
+    textField: {
+        width: "100%"
+    },
+    multilineColor: {
+        color: "#fff"
+    }
+}))
 
 export const ChatContainer: NextComponentType = () => {
+    const classes = useStyles()
+
     return (
-        <div className="w-full">
-            <div className="h-[400px] w-full border-gray-300 border-[1px] border-solid"></div>
-            
+        <div className="w-full h-full flex flex-col">
+            <div className="flex-1 w-full border-gray-300 border-[1px] border-solid"></div>
+            <TextField
+                fullWidth
+                style={{textAlign: 'left'}}
+                multiline
+                rows={5}
+                className="border-[1px] border-white border-solid"
+                InputProps={{
+                    className: classes.multilineColor,
+                    endAdornment: <Button variant="contained">submit</Button>
+                  }}
+            />
         </div>
     )
 }
