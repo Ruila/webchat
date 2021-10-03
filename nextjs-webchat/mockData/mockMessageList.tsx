@@ -1,4 +1,5 @@
-export const mockMessageList = [
+import { MessageListType } from "../types/MessageListType"
+export const mockMessageList: Array<MessageListType> = [
     {
         type: "friend",
         message: "Tell Me!!!!!!!!!"

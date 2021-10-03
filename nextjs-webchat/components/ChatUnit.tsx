@@ -9,7 +9,7 @@ type ChatUnitProps = {
 export const ChatUnit: FunctionComponent<ChatUnitProps> = ({type, message}) => {
 
     const renderUnit = () => {
-        if(type === "me") {
+        if(type === "friend") {
             return (  
                 <div className="flex my-2 mx-2">
                     <div className="p-2 bg-gray-600 mr-2 rounded-full">
