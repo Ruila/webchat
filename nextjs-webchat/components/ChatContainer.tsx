@@ -22,8 +22,8 @@ export const ChatContainer: NextComponentType = () => {
 
     return (
         <div className="w-full h-full flex flex-col">
-            <div className="flex-1 w-full border-gray-300 border-[1px] border-solid">
-                {renderMessage}
+            <div className="flex-1 w-full border-gray-300 border-[1px] overflow-scroll border-solid">
+                 {renderMessage}
             </div>
             <TextField
                 fullWidth
