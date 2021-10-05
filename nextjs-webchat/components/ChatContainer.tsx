@@ -4,7 +4,7 @@ import { makeStyles } from '@mui/styles';
 import Button from '@mui/material/Button'; 
 import { ChatUnit } from "./ChatUnit"
 import { mockMessageList } from "../mockData/mockMessageList"
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { MessageListType } from "../types/MessageListType"
 
 const useStyles = makeStyles (theme => ({
@@ -18,15 +18,16 @@ const useStyles = makeStyles (theme => ({
 
 export const ChatContainer: FunctionComponent = () => {
     const classes = useStyles()
+    const refChatBox = useRef<HTMLDivElement>(null);
     const [message, setMessage] = useState<string>("")
     const [messageList, setMessageList] = useState<Array<MessageListType>>(mockMessageList)
 
-    const handleTypeing = (e) => {
+    const handleTypeing = (e: React.ChangeEvent<HTMLInputElement>) => {
         setMessage(e.target.value)
     }
 
     const submit = () => {
-        if(!message) {
+        if(!!message) {
             setMessageList(arr => [...arr, {
                 type: "me",
                 message: message
@@ -34,13 +35,20 @@ export const ChatContainer: FunctionComponent = () => {
         }
     }
 
+    const scrollToBottom = () => {
+        if (refChatBox.current) {
+            refChatBox.current.scrollTo(0, refChatBox.current.scrollHeight)
+          }
+    }
+
     useEffect(()=>{
         console.info("change", messageList)
-    }, [messageList])
+        scrollToBottom()
+    }, [message, messageList])
 
     return (
         <div className="w-full h-full flex flex-col">
-            <div className="flex-1 w-full border-gray-300 border-[1px] overflow-scroll border-solid">
+            <div ref={refChatBox} className="flex-1 w-full border-gray-300 border-[1px] overflow-scroll border-solid">
                  {messageList.map((item, index)=>(<ChatUnit key={index} type={item.type} message={item.message} />))}
             </div>
             <TextField
