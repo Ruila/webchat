@@ -6,6 +6,7 @@ import { ChatUnit } from "./ChatUnit"
 import { mockMessageList } from "../mockData/mockMessageList"
 import { useEffect, useState, useRef } from 'react';
 import { MessageListType } from "../types/MessageListType"
+import { useAsyncFn } from 'react-use';
 
 const useStyles = makeStyles (theme => ({
     textField: {
@@ -22,11 +23,34 @@ export const ChatContainer: FunctionComponent = () => {
     const [message, setMessage] = useState<string>("")
     const [messageList, setMessageList] = useState<Array<MessageListType>>(mockMessageList)
 
+    const [msgList, doGetMsgList] = useAsyncFn(async () => {
+        const response = await fetch("http://localhost:3000/api/msg-list/123");
+        console.info("check", response)
+        const result = await response.text();
+        console.info("text", result)
+        return result
+    }, []);
+
+    const [sendMessage, doSendMessage] = useAsyncFn(async () => {
+        const response = await fetch("http://localhost:3000/api/msg-list/123", {
+            method: "POST",
+            body: JSON.stringify({
+                message:'sending',
+                type: "me"
+              })
+        });
+        console.info("check", response)
+        const result = await response.text();
+        console.info("text", result)
+        return result
+    }, []);
+
     const handleTypeing = (e: React.ChangeEvent<HTMLInputElement>) => {
         setMessage(e.target.value)
     }
 
     const submit = () => {
+        doSendMessage().catch()
         if(!!message) {
             setMessageList(arr => [...arr, {
                 type: "me",
@@ -40,6 +64,10 @@ export const ChatContainer: FunctionComponent = () => {
             refChatBox.current.scrollTo(0, refChatBox.current.scrollHeight)
           }
     }
+
+    useEffect(()=>{
+        doGetMsgList().catch()
+    }, [])
 
     useEffect(()=>{
         console.info("change", messageList)
