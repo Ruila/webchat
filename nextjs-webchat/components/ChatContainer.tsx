@@ -7,6 +7,7 @@ import { mockMessageList } from "../mockData/mockMessageList"
 import { useEffect, useState, useRef } from 'react';
 import { MessageListType } from "../types/MessageListType"
 import { useAsyncFn } from 'react-use';
+import webSocket from 'socket.io-client'
 
 const useStyles = makeStyles (theme => ({
     textField: {
@@ -23,11 +24,29 @@ export const ChatContainer: FunctionComponent = () => {
     const [message, setMessage] = useState<string>("")
     const [messageList, setMessageList] = useState<Array<MessageListType>>(mockMessageList)
 
+    const [ws,setWs] = useState(null)
+
+    useEffect(() => {
+        setWs(webSocket('http://localhost:8080', {
+            withCredentials: true,
+        }))
+    }, [])
+
+    useEffect(() => {
+        if(ws){
+            console.log('success connect in client!')
+            initWebSocket()
+        }
+    },[ws])
+
+    const initWebSocket = () => {
+        ws.on('getMessage', message => {
+            console.log(message)
+        })
+    }
     const [msgList, doGetMsgList] = useAsyncFn(async () => {
         const response = await fetch("http://localhost:3000/api/msg-list/123");
-        console.info("check", response)
         const result = await response.text();
-        console.info("text", result)
         return result
     }, []);
 
@@ -39,9 +58,7 @@ export const ChatContainer: FunctionComponent = () => {
                 type: "me"
               })
         });
-        console.info("check", response)
         const result = await response.text();
-        console.info("text", result)
         return result
     }, []);
 
@@ -52,6 +69,7 @@ export const ChatContainer: FunctionComponent = () => {
     const submit = () => {
         doSendMessage().catch()
         if(!!message) {
+            ws.emit('getMessage', '只回傳給發送訊息的 client')
             setMessageList(arr => [...arr, {
                 type: "me",
                 message: message
