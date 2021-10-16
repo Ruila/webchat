@@ -35,13 +35,18 @@ export const ChatContainer: FunctionComponent = () => {
     useEffect(() => {
         if(ws){
             console.log('success connect in client!')
-            initWebSocket()
+            onChangeWebSocket()
         }
     },[ws])
 
-    const initWebSocket = () => {
+    const onChangeWebSocket = () => {
+        console.info("i got it")
         ws.on('getMessage', message => {
-            console.log(message)
+            console.log("from message", message)
+            setMessageList(arr => [...arr, {
+                type: "me",
+                message: message
+            }])
         })
     }
     const [msgList, doGetMsgList] = useAsyncFn(async () => {
@@ -69,7 +74,7 @@ export const ChatContainer: FunctionComponent = () => {
     const submit = () => {
         doSendMessage().catch()
         if(!!message) {
-            ws.emit('getMessage', '只回傳給發送訊息的 client')
+            ws.emit('getMessage', message)
             setMessageList(arr => [...arr, {
                 type: "me",
                 message: message
@@ -88,7 +93,6 @@ export const ChatContainer: FunctionComponent = () => {
     }, [])
 
     useEffect(()=>{
-        console.info("change", messageList)
         scrollToBottom()
     }, [message, messageList])
 
