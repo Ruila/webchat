@@ -35,8 +35,7 @@ io.on('connection', socket => {
     //監聽透過 connection 傳進來的事件
     socket.on('getMessage', message => {
         //回傳 message 給發送訊息的 Client
-        console.log("got message")
-        io.emit('getMessage', "以下是接收到的訊息")
+        console.log("got message in server")
         io.emit('getMessage', message)
     })
 })

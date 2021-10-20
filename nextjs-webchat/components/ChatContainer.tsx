@@ -6,7 +6,7 @@ import { ChatUnit } from "./ChatUnit"
 import { mockMessageList } from "../mockData/mockMessageList"
 import { useEffect, useState, useRef } from 'react';
 import { MessageListType } from "../types/MessageListType"
-import { useAsyncFn } from 'react-use';
+import { useAsyncFn, useSessionStorage } from 'react-use';
 import webSocket from 'socket.io-client'
 
 const useStyles = makeStyles (theme => ({
@@ -23,6 +23,7 @@ export const ChatContainer: FunctionComponent = () => {
     const refChatBox = useRef<HTMLDivElement>(null);
     const [message, setMessage] = useState<string>("")
     const [messageList, setMessageList] = useState<Array<MessageListType>>(mockMessageList)
+    const [Id, setId] = useSessionStorage('id', "a");
 
     const [ws,setWs] = useState(null)
 
@@ -44,8 +45,8 @@ export const ChatContainer: FunctionComponent = () => {
         ws.on('getMessage', message => {
             console.log("from message", message)
             setMessageList(arr => [...arr, {
-                type: "me",
-                message: message
+                type: "friend",
+                message: message.text
             }])
         })
     }
@@ -74,7 +75,10 @@ export const ChatContainer: FunctionComponent = () => {
     const submit = () => {
         doSendMessage().catch()
         if(!!message) {
-            ws.emit('getMessage', message)
+            ws.emit('getMessage', {
+                text: message,
+                identify: Id
+            })
             setMessageList(arr => [...arr, {
                 type: "me",
                 message: message
