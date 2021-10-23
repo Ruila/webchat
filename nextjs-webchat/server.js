@@ -17,7 +17,7 @@ const server = require('http').Server(app)
 //將啟動的 Server 送給 socket.io 處理
 const io = require('socket.io')(server, {
     cors: {
-        origin: "http://localhost:3000",
+        origin: "http://192.168.0.152:3000",
         methods: ["GET", "POST"],
         credentials: true
       }

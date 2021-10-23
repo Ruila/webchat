@@ -28,7 +28,7 @@ export const ChatContainer: FunctionComponent = () => {
     const [ws,setWs] = useState(null)
 
     useEffect(() => {
-        setWs(webSocket('http://localhost:8080', {
+        setWs(webSocket('http://192.168.0.152:8080', {
             withCredentials: true,
         }))
     }, [])
